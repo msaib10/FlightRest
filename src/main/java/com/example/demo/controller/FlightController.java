@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dao.FlightRepo;
 import com.example.demo.model.Flight;
 
+
 @RestController
 public class FlightController {
 
@@ -36,8 +37,9 @@ public class FlightController {
 	public List<Flight> getAll (String sortBy) {
 		Sort sortOrder = Sort.by("duration"); 
      	List<Flight> list = repo.findAll(sortOrder);
-    	return list;
+     	return list;
 	}
+	
 	
 	@PostMapping(path="/flight",consumes= {"application/json"})
 	public Flight addFlight(@RequestBody Flight flight)
@@ -62,9 +64,25 @@ public class FlightController {
 	}
 	
 	@RequestMapping("/flight/{flightNumber}")
-	public Optional<Flight> getFlight(@PathVariable("flightNumber")String flightNumber)
+	public Flight getFlight(@PathVariable("flightNumber")String flightNumber)
 	{
-		return repo.findById(flightNumber);	
+		Optional<Flight> optional = repo.findById(flightNumber);
+		Flight flight = null;
+		if (optional.isPresent()) {
+			flight = optional.get();
+		} else {
+			throw new RuntimeException(" Flight not found for id :: " + flightNumber);
+		}
+		return flight;
 	}
 	
+	Flight flight = new Flight ();
+	@GetMapping("/flights/{origin}/{destination}")
+	public List<Flight> getAllSourceDestionation (@PathVariable String origin, @PathVariable String destination ) {
+		List<Flight> list = new ArrayList <> ();
+		if (origin.equals(flight.getOrigin()) &&  destination.equals(flight.getDestination())  ) {
+			list = repo.findAll();
+		}
+    	return list;
+	}
 }
