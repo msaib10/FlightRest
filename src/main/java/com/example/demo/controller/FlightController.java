@@ -76,6 +76,7 @@ public class FlightController {
 		return flight;
 	}
 	
+	
 	Flight flight = new Flight ();
 	@GetMapping("/flights/{origin}/{destination}")
 	public List<Flight> getAllSourceDestionation (@PathVariable String origin, @PathVariable String destination ) {
